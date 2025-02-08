@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人用辞書アプリ</title>
+    <style>
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* ページ全体のスクロール禁止 */
+}
+        .header {
+            background: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        .container {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden; /* 全体のスクロールを無効化 */
+}
+.sidebar, .grammar-sidebar {
+    padding: 10px;
+    overflow-y: auto; /* カラム内部だけスクロール */
+    flex-shrink: 0;
+}
+
+.sidebar {
+    width: 20%;
+    background: #eee;
+    resize: horizontal;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px; /* 固定間隔 */
+    padding: 5px;
+    overflow-y: auto; /* スクロールを有効化 */
+    max-height: 100vh; /* サイドバーの最大高さを設定 */
+    align-content: flex-start; /* 上詰め配置 */
+}
+
+.word-box {
+    border: 1px solid #aaa;
+    padding: 3px 6px;
+    background: white;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+    white-space: nowrap;
+    line-height: 1.2; /* 縦幅をテキストに合わせる */
+    height: 34px; /* 単語ボタンの固定高さ */
+}
+
+        .word-box:hover .word-description {
+            display: block;
+        }
+        .word-description {
+            display: none;
+            position: absolute;
+            left: 0;
+            bottom: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        .editor-container {
+            flex-grow: 1;
+            padding: 10px;
+        }
+        .grammar-sidebar {
+            width: 20%;
+            background: #ddd;
+        }
+        .grammar-section {
+            margin-bottom: 10px;
+            border: 1px solid #aaa;
+            background: white;
+        }
+        .grammar-header {
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ccc;
+        }
+        .grammar-content {
+            padding: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button onclick="saveText()">保存</button>
+    </div>
+    <div class="container">
+        <div class="sidebar" id="word-list"></div>
+        <div class="editor-container">
+            <textarea id="editor" style="width: 100%; height: 100%;"></textarea>
+        </div>
+        <div class="grammar-sidebar">
+            <div class="grammar-section">
+                <div class="grammar-header" onclick="toggleGrammar(this)">文法 +</div>
+                <div class="grammar-content">文法</div>
+            </div>
+            <div class="grammar-section">
+                <div class="grammar-header" onclick="toggleGrammar(this)">名詞の性 +</div>
+                <div class="grammar-content">名詞の性別による違い</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function loadWords() {
+            fetch('https://sakazukiaoi.github.io/museum/dictionary.json')
+                .then(response => response.json())
+                .then(words => {
+                    const list = document.getElementById("word-list");
+                    words.forEach(w => {
+                        const div = document.createElement("div");
+                        div.className = "word-box";
+                        div.innerHTML = `<div>${w.word}</div><div>(${w.reading})</div><div class='word-description'>${w.description}</div>`;
+                        div.onclick = () => insertWord(w.word);
+                        list.appendChild(div);
+                    });
+                });
+        }
+
+        function insertWord(word) {
+            const editor = document.getElementById("editor");
+            editor.value += word + " ";
+        }
+
+        function toggleGrammar(header) {
+            const content = header.nextElementSibling;
+            const isOpen = content.style.display === 'block';
+            content.style.display = isOpen ? 'none' : 'block';
+            header.textContent = isOpen ? header.textContent.replace('-', '+') : header.textContent.replace('+', '-');
+        }
+
+        function loadText() {
+            fetch('memo.txt')
+                .then(response => response.text())
+                .then(text => {
+                    document.getElementById("editor").value = text;
+                });
+        }
+
+        function saveText() {
+            const text = document.getElementById("editor").value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'memo.txt';
+            a.click();
+        }
+
+        window.onload = function() {
+            loadWords();
+            loadText();
+        };
+        
+    </script>
+</body>
+</html>
