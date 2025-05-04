@@ -159,7 +159,7 @@ body {
         <div class="editor-container">
             <textarea id="editor" style="width: 100%; height: 100%;"></textarea>
         </div>
-        <div class="grammar-sidebar">
+<div class="grammar-sidebar">
             <div class="grammar-section">
                 <div class="grammar-header" onclick="toggleGrammar(this)">文法 +</div>
                 <div class="grammar-content">文法</div>
@@ -191,22 +191,27 @@ body {
             </div>            
         </div>
 
-        <div class="grammar-section">
-                <div class="grammar-header" onclick="toggleGrammar(this)">10←→16 +</div>
-                    <div class="input-container">
-        <label for="decimal-input">10進数:</label>
-        <input type="number" id="decimal-input" placeholder="10進数を入力" />
-        <span class="result" id="hex-result"></span>
+    <div class="grammar-section">
+        <div class="grammar-header" onclick="toggleGrammar(this)">10←→16 +</div>
+          <div class="grammar-content">あああ<br>ああああ
+            <div class="input-container">
+                <label for="decimal-input">10進数:</label>
+                <input type="number" id="decimal-input" placeholder="10進数を入力" />
+                <span class="result" id="hex-result"></span>
+            </div>
+            <div class="input-container">
+                <label for="hex-input">16進数:</label>
+                <input type="text" id="hex-input" placeholder="16進数を入力" />
+                <span class="result" id="decimal-result"></span>
+            </div>
+          </div>
     </div>
-    <div class="input-container">
-        <label for="hex-input">16進数:</label>
-        <input type="text" id="hex-input" placeholder="16進数を入力" />
-        <span class="result" id="decimal-result"></span>
-    </div>
-        </div>
-            
-        </div>
-    </div>
+</div>
+
+
+
+
+
     <script>
         function loadWords() {
             fetch('https://sakazukiaoi.github.io/museum/dictionary.json')
