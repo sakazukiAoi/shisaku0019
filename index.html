@@ -94,6 +94,33 @@ body {
             display: none;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordions = document.querySelectorAll('.accordion');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    if (content.style.display === 'block') {
+                        content.style.display = 'none';
+                    } else {
+                        content.style.display = 'block';
+                    }
+                });
+            });
+
+
+            // 数式の計算
+            const inputBox = document.getElementById('input-box');
+            const resultBox = document.getElementById('result-box');
+
+            inputBox.addEventListener('input', function() {
+                const inputValue = parseFloat(inputBox.value) || 0;
+                const result = 70 - 70 * 0.1 * inputValue;
+                resultBox.textContent = result.toFixed(2);
+            });
+        });
+    </script>
+
 </head>
 <body>
     <div class="header">
@@ -121,6 +148,16 @@ body {
                 <div class="grammar-header" onclick="toggleGrammar(this)">色のつくり方 +</div>
                 <div class="grammar-content">あああ<br>ああああ</div>
             </div>
+        <div class="grammar-section">
+                <div class="grammar-header" onclick="toggleGrammar(this)">計算式 +</div>
+            <div class="grammar-content">
+                <label>スライムの体力計算：</label>
+                <span>70 - 70 × 0.1 ×</span>
+                <input type="number" id="input-box" placeholder="0" />
+                <span>=</span>
+                <div class="result-box" id="result-box">0.00</div>
+            </div>
+        </div>
         </div>
     </div>
     <script>
